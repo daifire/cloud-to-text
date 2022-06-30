@@ -87,7 +87,7 @@
           </div>
         </div>
       </div>
-      <div style="position:absolute;bottom:0px;left:50%;margin-left:-10px">
+      <div style="position:absolute;bottom:10px;left:50%;margin-left:-10px">
         <el-button v-show="join" style="width:auto;" circle v-if="start" @click="startFanl" size="mini" type="primary"
           data-coreui-toggle="tooltip" data-coreui-placement="top" title="Start Transcription">
           <font-awesome-icon style="width:20px;height:20px;" icon="microphone-slash" />
