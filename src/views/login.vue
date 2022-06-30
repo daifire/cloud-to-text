@@ -20,7 +20,7 @@
         </div>
       </el-form>
     </div>
-    <div class="fs24 mobile1" v-if="index == 2">
+    <div class="fs24 mobile1" v-if="index == 2 && !isMobile">
       <div class=content v-if="options.role == 'audience'">
         <div>
           <span>Room Name : {{this.options.channel}}</span>
@@ -86,7 +86,75 @@
         </div>
       </div>
     </div>
-    <div class="buttonList">
+    <div class="fs24 mobile1" v-if="index == 2 && isMobile">
+      <div>
+        <div class=content v-if="options.role == 'audience'">
+        <div>
+          <span>Room Name : {{this.options.channel}}</span>
+        </div>
+        <div v-for="(item, index) in userList" :key="index">
+          <div class="item" v-if="index == 0">
+            <div class="first">
+              <el-avatar :src="allData[item.uid].src"></el-avatar>
+            </div>
+            <div>
+              <div id="wrapperDiv">
+
+                <div id="div1" style="float:left"><span>name: {{ item.name
+                    }}</span><span>(self,Audience) </span>
+                  <div id="div2" style="float:right">
+                    <el-button v-if="left" circle type="success"
+                      style="padding-left: 2px;padding-bottom:2px;margin-left:8px"></el-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="itemContent" v-if="index < 5 && index > 0">
+            <div class="top">
+              <div class="first">
+                <el-avatar :src="allData[item.uid].src"></el-avatar>
+              </div>
+              <div id="wrapperDiv">
+                <div id="div1" style="float:left"><span>name: {{ item.name }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="bottom" v-if="allData[item.uid]">
+              <p ref="textContent" v-html="allData[item.uid].stringBuilder"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class=content v-if="options.role == 'host'">
+       <div>
+          <span>Room Name : {{this.options.channel}}</span>
+        </div>
+        <div v-for="(item, index) in userList" :key="index">
+          <div class="itemContent" v-if="index < 4">
+            <div class="top">
+              <div class="first">
+                <el-avatar :src="allData[item.uid].src"></el-avatar>
+              </div>
+              <div id="wrapperDiv">
+                <div id="div1" style="float:left"><span>name: {{ item.name }}</span><span
+                    v-if="index == 0">(self,Host)</span>
+                  <div id="div2" style="float:right">
+                    <el-button v-if="left" circle type="success"
+                      style="padding-left: 2px;padding-bottom:2px;margin-left:8px"></el-button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="bottom" v-if="allData[item.uid]">
+              <p ref="textContent" v-html="allData[item.uid].stringBuilder"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="buttonList" v-if="!isMobile">
       <el-button v-show="join" style="width:auto;" circle v-if="start" @click="startFanl" size="mini" type="primary"
         data-coreui-toggle="tooltip" data-coreui-placement="top" title="Start Transcription">
         <font-awesome-icon style="width:20px" icon="microphone-slash" />
@@ -824,7 +892,8 @@ export default {
 }
 
 .mobile {
-  width: 375px;
+  width: 100%;
+  max-width: 375px;
   height: 667px;
   margin: 0 auto;
   box-shadow: 1px 0px 10px 0px;
@@ -844,7 +913,8 @@ export default {
 }
 
 .mobile1 {
-  width: 375px;
+  width: 100%;
+  max-width: 375px;
   height: 667px;
   overflow: auto;
   overflow-x: hidden;
