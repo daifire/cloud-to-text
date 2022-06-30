@@ -90,11 +90,11 @@
       <div style="position:absolute;bottom:10px;left:50%;margin-left:-10px">
         <el-button v-show="join" style="width:auto;" circle v-if="start" @click="startFanl" size="mini" type="primary"
           data-coreui-toggle="tooltip" data-coreui-placement="top" title="Start Transcription">
-          <font-awesome-icon style="width:20px;height:20px;" icon="microphone-slash" />
+          <font-awesome-icon style="width:30px;height:30px;" icon="microphone-slash" />
         </el-button>
         <el-button v-show="join" v-if="left" style="width:auto;" circle @click="stopFanl" size="mini" type="primary"
           data-coreui-placement="top" title="Stop Transcription">
-          <font-awesome-icon style="width:20px;height:20px;" icon="microphone" />
+          <font-awesome-icon style="width:30px;height:30px;" icon="microphone" />
         </el-button>
       </div>
     </div>
@@ -106,7 +106,7 @@
       </el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleText">Full Transcription</el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleTextMeeting">Conversation</el-button>
-      <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content Filter</el-button>
+      <!-- <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content Filter</el-button> -->
 
       <el-button size="mini" v-show="false" type="primary" plain @click="queryFanl" :disabled="!taskId">Query status
       </el-button>
