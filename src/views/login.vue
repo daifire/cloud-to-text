@@ -139,7 +139,7 @@
     </el-drawer>
     <el-drawer title="Conversation" :visible.sync="drawerFanlSimpleMetting">
       <div class="drawerContent">
-        <div v-for='(item, i) in str' :key="i">
+        <div v-for='(item, i) in simpletextMetting' :key="i">
           <div v-if="item.text">
             <p>{{ item.name }} {{ new Date(parseInt(item.time)).toLocaleString() }}</p>
             <p>{{ item.text }}</p>
@@ -249,9 +249,9 @@ export default {
       simpletext: '',
       dialogFormVisible: false,
       drawerFanlSimpleMetting: false,
-      simpletextMetting: '',
+      simpletextMetting: [],
       rtmChannel: '',
-      str: '',
+      // str: [],
       profanityStr: '',
       drawerFanlProfanity: false,
     }
@@ -319,30 +319,30 @@ export default {
     },
     simpleTextMeeting() {
       this.drawerFanlSimpleMetting = true;
-      console.log(this.simpletextMetting)
-      let str = [];
-      let simpletextMettingArr = this.simpletextMetting.split('</br>');
-      simpletextMettingArr.forEach((item, index) => {
-        if (item) {
-          let itemarry = item.split('</>');
-          str.push({
-            name: itemarry[0],
-            uid: itemarry[1],
-            time: itemarry[2],
-            text: itemarry[3]
-          })
-        }
-      })
-      for (let i = 0; i < str.length; i++) {
-        for (let j = 0; j < i; j++) {
-          if (str[i].uid == str[j].uid && str[i].time - str[j].time < 60000 && str[j].text) {
-            console.log(str[i].text)
-            str[j].text = str[j].text += str[i].text;
-            str[i].text = '';
-          }
-        }
-      }
-      this.str = str;
+      // console.log(this.simpletextMetting)
+      // let str = [];
+      // let simpletextMettingArr = this.simpletextMetting.split('</br>');
+      // simpletextMettingArr.forEach((item, index) => {
+      //   if (item) {
+      //     let itemarry = item.split('</>');
+      //     str.push({
+      //       name: itemarry[0],
+      //       uid: itemarry[1],
+      //       time: itemarry[2],
+      //       text: itemarry[3]
+      //     })
+      //   }
+      // })
+      // for (let i = 0; i < str.length; i++) {
+      //   for (let j = 0; j < i; j++) {
+      //     if (str[i].uid == str[j].uid && str[i].time - str[j].time < 60000 && str[j].text) {
+      //       console.log(str[i].text)
+      //       str[j].text = str[j].text += str[i].text;
+      //       str[i].text = '';
+      //     }
+      //   }
+      // }
+      // this.str = str;
     },
     profanity() {
       this.drawerFanlProfanity = true;
@@ -706,7 +706,22 @@ export default {
         this.outputStreamNoFanle += new Date(parseInt(textstream.time)).toLocaleString() + ' ' + text2 + '</br>';
       }
       if (text3.length) {
-        this.simpletextMetting += this.allData[textstream.uid].name + '</>' + textstream.uid + '</>' + textstream.time + '</>' + text3 + '</br>';
+        let flag = false;
+        // this.simpletextMetting += this.allData[textstream.uid].name + '</>' + textstream.uid + '</>' + textstream.time + '</>' + text3 + '</br>';
+        this.simpletextMetting.forEach((item)=>{
+          if (item.uid == textstream.uid && textstream.time - item.time < 60000) {
+            item.text += text3;
+            flag = true;
+          }
+        })
+        if(!flag){
+          this.simpletextMetting.push({
+            name: this.allData[textstream.uid].name ,
+            uid: textstream.uid,
+            time: textstream.time,
+            text: text3
+          })
+        }
       }
       if (text4.length) {
         this.profanityStr += this.allData[textstream.uid].name + ' ' + textstream.uid + ' ' + new Date(parseInt(textstream.time)).toLocaleString() + '</br>' + text4 + '</br>';

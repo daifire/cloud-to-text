@@ -1,1 +1,0 @@
-// calculate average of two numbers
