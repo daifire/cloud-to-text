@@ -32,9 +32,8 @@
             </div>
             <div>
               <div id="wrapperDiv">
-
-                <div id="div1" style="float:left"><span>name: {{ item.name
-                    }}</span><span>(self,Audience) </span>
+                <div id="div1" style="float:left"><span>User Name: {{ item.name
+                    }}</span><span> (Self,Audience) </span>
                   <div id="div2" style="float:right">
                     <el-button v-if="left" circle type="success"
                       style="padding-left: 2px;padding-bottom:2px;margin-left:8px"></el-button>
@@ -49,7 +48,7 @@
                 <el-avatar :src="allData[item.uid].src"></el-avatar>
               </div>
               <div id="wrapperDiv">
-                <div id="div1" style="float:left"><span>name: {{ item.name }}</span>
+                <div id="div1" style="float:left"><span>User Name: {{ item.name }}</span>
                 </div>
               </div>
             </div>
@@ -70,8 +69,8 @@
                 <el-avatar :src="allData[item.uid].src"></el-avatar>
               </div>
               <div id="wrapperDiv">
-                <div id="div1" style="float:left"><span>name: {{ item.name }}</span><span
-                    v-if="index == 0">(self,Host)</span>
+                <div id="div1" style="float:left"><span>User Name: {{ item.name }}</span><span
+                    v-if="index == 0"> (Self,Host)</span>
                   <div id="div2" style="float:right">
                     <el-button v-if="left" circle type="success"
                       style="padding-left: 2px;padding-bottom:2px;margin-left:8px"></el-button>
@@ -84,87 +83,19 @@
             </div>
           </div>
         </div>
+      </div>
+      <div style="position:absolute;bottom:10px;left:50%;margin-left:-10px">
+        <el-button v-show="join" style="width:auto;" circle v-if="start" @click="startFanl" size="mini" type="primary"
+          data-coreui-toggle="tooltip" data-coreui-placement="top" title="Start Transcription">
+          <font-awesome-icon style="width:30px;height:30px;" icon="microphone-slash" />
+        </el-button>
+        <el-button v-show="join" v-if="left" style="width:auto;" circle @click="stopFanl" size="mini" type="primary"
+          data-coreui-placement="top" title="Stop Transcription">
+          <font-awesome-icon style="width:30px;height:30px;" icon="microphone" />
+        </el-button>
       </div>
     </div>
-    <div class="fs24 mobile1" v-if="index == 2 && isMobile">
-      <div>
-        <div class=content v-if="options.role == 'audience'">
-        <div>
-          <span>Room Name : {{this.options.channel}}</span>
-        </div>
-        <div v-for="(item, index) in userList" :key="index">
-          <div class="item" v-if="index == 0">
-            <div class="first">
-              <el-avatar :src="allData[item.uid].src"></el-avatar>
-            </div>
-            <div>
-              <div id="wrapperDiv">
-
-                <div id="div1" style="float:left"><span>name: {{ item.name
-                    }}</span><span>(self,Audience) </span>
-                  <div id="div2" style="float:right">
-                    <el-button v-if="left" circle type="success"
-                      style="padding-left: 2px;padding-bottom:2px;margin-left:8px"></el-button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="itemContent" v-if="index < 5 && index > 0">
-            <div class="top">
-              <div class="first">
-                <el-avatar :src="allData[item.uid].src"></el-avatar>
-              </div>
-              <div id="wrapperDiv">
-                <div id="div1" style="float:left"><span>name: {{ item.name }}</span>
-                </div>
-              </div>
-            </div>
-            <div class="bottom" v-if="allData[item.uid]">
-              <p ref="textContent" v-html="allData[item.uid].stringBuilder"></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class=content v-if="options.role == 'host'">
-       <div>
-          <span>Room Name : {{this.options.channel}}</span>
-        </div>
-        <div v-for="(item, index) in userList" :key="index">
-          <div class="itemContent" v-if="index < 4">
-            <div class="top">
-              <div class="first">
-                <el-avatar :src="allData[item.uid].src"></el-avatar>
-              </div>
-              <div id="wrapperDiv">
-                <div id="div1" style="float:left"><span>name: {{ item.name }}</span><span
-                    v-if="index == 0">(self,Host)</span>
-                  <div id="div2" style="float:right">
-                    <el-button v-if="left" circle type="success"
-                      style="padding-left: 2px;padding-bottom:2px;margin-left:8px"></el-button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="bottom" v-if="allData[item.uid]">
-              <p ref="textContent" v-html="allData[item.uid].stringBuilder"></p>
-            </div>
-          </div>
-        </div>
-      </div>
-      </div>
-    </div>
-    <div class="buttonList" v-if="!isMobile">
-      <el-button v-show="join" style="width:auto;" circle v-if="start" @click="startFanl" size="mini" type="primary"
-        data-coreui-toggle="tooltip" data-coreui-placement="top" title="Start Transcription">
-        <font-awesome-icon style="width:20px" icon="microphone-slash" />
-      </el-button>
-
-      <el-button v-show="join" v-if="left" style="width:auto;" circle @click="stopFanl" size="mini" type="primary"
-        data-coreui-placement="top" title="Stop Transcription">
-        <font-awesome-icon style="width:20px" icon="microphone" />
-      </el-button>
-
+    <div class="buttonList">
       <el-button size="mini" v-show="join" type="primary" plain @click="back">Leave Room</el-button>
       <el-button size="mini" v-show="false" type="primary" plain @click="fanl" v-if="start">load transcription
       </el-button>
@@ -172,7 +103,7 @@
       </el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleText">Full Transcription</el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleTextMeeting">Conversation</el-button>
-      <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content filter</el-button>
+      <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content Filter</el-button>
 
       <el-button size="mini" v-show="false" type="primary" plain @click="queryFanl" :disabled="!taskId">Query status
       </el-button>
@@ -200,7 +131,7 @@
         <p>{{ this.simpletext }}</p>
       </div>
     </el-drawer>
-    <el-drawer title="notification" :visible.sync="drawerFanlProfanity">
+    <el-drawer title="Conversation(Content Filter)" :visible.sync="drawerFanlProfanity">
       <div class="drawerContent">
         <p v-html="profanityStr"></p>
       </div>
@@ -268,6 +199,7 @@ import AgoraRTM from "agora-rtm-sdk";
 import protoRoot from "@/proto/proto.js";
 import axios from 'axios'
 import _ from "lodash";
+import { async } from "q";
 
 const VUE_APP_ID = process.env.VUE_APP_ID;
 export default {
@@ -319,19 +251,15 @@ export default {
       drawerFanlSimpleMetting: false,
       simpletextMetting: [],
       rtmChannel: '',
-      // str: [],
+      // str: '',
       profanityStr: '',
       drawerFanlProfanity: false,
-      isMobile:false
     }
   },
   created() {
-    if(window.screen.width<500){
-      this.isMobile = true;
-    }
+
   },
   mounted() {
-    console.log(this.isMobile)
     window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
   },
   beforeDestroy() {
@@ -391,7 +319,6 @@ export default {
     },
     simpleTextMeeting() {
       this.drawerFanlSimpleMetting = true;
-      // console.log(this.simpletextMetting)
       // let str = [];
       // let simpletextMettingArr = this.simpletextMetting.split('</br>');
       // simpletextMettingArr.forEach((item, index) => {
@@ -474,6 +401,10 @@ export default {
         }
       })
     },
+
+    async rtmMemberLeft(userId){
+        await this.rtmClient.deleteChannelAttributesByKeys(this.options.channel, [userId.toString()]);
+    },
     async startBasicCall() {
       AgoraRTC.setLogLevel(4)
       this.rtc.client = AgoraRTC.createClient({ mode: "live", codec: "vp8", role: this.options.role });
@@ -495,6 +426,7 @@ export default {
       this.rtmChannel = rtmChannel;
 
       rtmChannel.on('MemberJoined', () => this.rtmMemberJoined(this.options.channel));
+      rtmChannel.on('MemberLeft', () => this.rtmMemberLeft(this.uid));
 
       await rtmChannel.join().then(() => {
         console.log("RTM");
@@ -540,11 +472,11 @@ export default {
           }
         }
       })
-      this.rtc.client.on("user-left", (user, reason) => {
+      this.rtc.client.on("user-left", async (user, reason) => {
         if (this.allData[user.uid]) {
-          delete this.allData[user.uid]
-          this.userList.splice(this.userList.indexOf(user.uid), 1)
-          this.hostList.splice(this.hostList.indexOf(user.uid), 1)
+          delete this.allData[user.uid];
+          this.userList.splice(this.userList.indexOf(user.uid), 1);
+          this.hostList.splice(this.hostList.indexOf(user.uid), 1);
         }
       })
       this.rtc.client.on("stream-message", async (uid, payload) => {
@@ -577,20 +509,15 @@ export default {
         AGC: this.options.AGC,
         ANS: this.options.ANS,
       });
-
-
-      // if (this.options.role == 'host') {
-      //   await this.rtc.client.publish([this.rtc.localAudioTrack]);
-      // }
+      if (this.options.role == 'host') {
+        await this.rtc.client.publish([this.rtc.localAudioTrack]);
+      }
     },
     async leaveRoom() {
       this.start = true;
       this.left = false;
       this.join = false;
       this.rtc.localAudioTrack.close();
-      if (this.uid) {
-        await this.rtmClient.deleteChannelAttributesByKeys(this.options.channel, [this.uid.toString()]);
-      }
       await this.rtc.client.leave();
       await this.rtmChannel.leave();
       await this.rtmClient.logout();
@@ -793,7 +720,7 @@ export default {
             time: textstream.time,
             text: text3
           })
-        }
+        }      
       }
       if (text4.length) {
         this.profanityStr += this.allData[textstream.uid].name + ' ' + textstream.uid + ' ' + new Date(parseInt(textstream.time)).toLocaleString() + '</br>' + text4 + '</br>';
@@ -921,7 +848,7 @@ export default {
   margin: 0 auto;
   box-shadow: 1px 0px 10px 0px;
   background: url('../../img/logo.png') 140px 50px no-repeat;
-
+  position: relative;
   .content {
     padding-top: 100px;
 
@@ -1010,8 +937,5 @@ export default {
 
 .blue {
   color: blue;
-}
-.ismobile{
-  
 }
 </style>
