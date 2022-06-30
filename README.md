@@ -1,4 +1,4 @@
-# cloudToText
+# speechToText
 
 ## Project setup
 ```

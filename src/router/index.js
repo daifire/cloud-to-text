@@ -7,8 +7,9 @@ const routes = [
     path: '/',
     name: 'login',
     component: () => import('@/views/login'),
-  }
+  },
 ]
+
 const router = new Router({
   mode: 'hash',
   scrollBehavior: () => ({ y: 0 }),
