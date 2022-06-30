@@ -254,12 +254,16 @@ export default {
       // str: [],
       profanityStr: '',
       drawerFanlProfanity: false,
+      isMobile:false
     }
   },
   created() {
-
+    if(window.screen.width<500){
+      this.isMobile = true;
+    }
   },
   mounted() {
+    console.log(this.isMobile)
     window.addEventListener('beforeunload', e => this.beforeunloadHandler(e))
   },
   beforeDestroy() {
@@ -936,5 +940,8 @@ export default {
 
 .blue {
   color: blue;
+}
+.ismobile{
+  
 }
 </style>
