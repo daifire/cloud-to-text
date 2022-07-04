@@ -84,7 +84,7 @@
           </div>
         </div>
       </div>
-      <div style="position:fixed;top:580px;left:50%;margin-left: -40px;width: 200px;">
+      <div style="position:fixed;top:580px;left:50%;margin-left: -24px;width: 200px;text-align: left;">
         <el-button v-show="join" icon="el-icon-microphone" style="width:auto;font-size:30px;" circle v-if="start" @click="startFanl" size="mini" type="primary"  title="Start Transcription">
         </el-button>
         <el-button v-show="join" icon="el-icon-turn-off-microphone" v-if="left" style="width:auto;background:#cb4c38;font-size:30px;border:#cb4c38;" circle @click="stopFanl" size="mini" type="primary" title="Stop Transcription">
@@ -164,7 +164,7 @@
               </div>
             </div>
           </div>
-          <div style="position:fixed;top:85vh;left:50%;margin-left: -40px;width: 200px;">
+          <div style="position: fixed;top: 80vh;left: 50%;margin-left: -24px;width: 200px;text-align: left;">
             <el-button v-show="join" icon="el-icon-microphone" style="width:auto;font-size:30px;" circle v-if="start" @click="startFanl" size="mini" type="primary"  title="Start Transcription">
             </el-button>
             <el-button v-show="join" icon="el-icon-turn-off-microphone" v-if="left" style="width:auto;background:#cb4c38;font-size:30px;border:#cb4c38;" circle @click="stopFanl" size="mini" type="primary" title="Stop Transcription">
@@ -1066,6 +1066,7 @@ export default {
   .content{
     padding-top:20px ;
     width: 90vw;
+    -webkit-overflow-scrolling: touch;
   }
   .drawerContent{
     width: 90vw;
