@@ -188,11 +188,11 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="Content Filter" name="Content Filter">
+        <!-- <el-tab-pane label="Content Filter" name="Content Filter">
           <div class="drawerContent">
             <p v-html="profanityStr"></p>
           </div>
-        </el-tab-pane>
+        </el-tab-pane> -->
       </el-tabs>
     </div>
     <div class="buttonList" v-if="index == 2 && !isMobile">
