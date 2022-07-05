@@ -488,7 +488,7 @@ export default {
       this.beforeunloadHandler()
       this.outputStreamNoFanle = ''
       this.outputStreamFanle = ''
-      this.uid = '';
+
     },
     async rtmMemberJoined(channel) {
       const remoteUserInfo = await this.rtmClient.getChannelAttributes(channel);
@@ -513,9 +513,8 @@ export default {
         }
       })
     },
-
-    async rtmMemberLeft(userId){
-        await this.rtmClient.deleteChannelAttributesByKeys(this.options.channel, [userId.toString()]);
+    async rtmMemberLeft(){
+      await this.rtmClient.deleteChannelAttributesByKeys(this.options.channel, [this.uid.toString()]);
     },
     async startBasicCall() {
       AgoraRTC.setLogLevel(4)
@@ -537,8 +536,8 @@ export default {
       const rtmChannel = await this.rtmClient.createChannel(this.options.channel);
       this.rtmChannel = rtmChannel;
 
-      rtmChannel.on('MemberJoined', () => this.rtmMemberJoined(this.options.channel));
-      rtmChannel.on('MemberLeft', () => this.rtmMemberLeft(this.uid));
+      // rtmChannel.on('MemberJoined', () => this.rtmMemberJoined(this.options.channel));
+      // rtmChannel.on('MemberLeft', () => this.rtmMemberLeft(this.uid));
 
       await rtmChannel.join().then(() => {
         console.log("RTM");
@@ -561,33 +560,41 @@ export default {
         if (![1000, 2000].includes(user.uid)) {
           this.hostList.push(user.uid);
           const channelAttributes = await this.rtmClient.getChannelAttributes(this.options.channel);
-          const userListArray = JSON.parse(JSON.stringify(this.userList));
-          const remoteUserInfoArray = Object.keys(channelAttributes).map(key => {
-            return {
-              uid: key,
-              name: channelAttributes[key]
+          console.log(channelAttributes)
+          // const userListArray = JSON.parse(JSON.stringify(this.userList));
+          // const remoteUserInfoArray = Object.keys(channelAttributes).map(key => {
+          //   return {
+          //     uid: key,
+          //     name: channelAttributes[key]
+          //   }
+          // });
+          // console.log(remoteUserInfoArray)
+          // const usersToBeAdded = remoteUserInfoArray.filter(remoteUserInfo => {
+          //   return !userListArray.some(userList => userList.uid == remoteUserInfo.uid);
+          // });
+          // console.log(usersToBeAdded)
+          // if (usersToBeAdded !== undefined && usersToBeAdded) {
+          //   usersToBeAdded.forEach(item => {
+          //     this.userList.push({ uid: item.uid, name: item.name.value, online: false });
+          //     this.allData[item.uid] = {
+          //       src: require('../../img/avatar' + item.uid.toString().slice(-1) + '.png'),
+          //       name: item.name.value
+          //     }
+          //   })
+          // }
+          if(channelAttributes[user.uid]){
+            this.userList.push({ uid: user.uid, name: channelAttributes[user.uid].value, online: false })
+            this.allData[user.uid] = {
+              src: require('../../img/avatar' + user.uid.toString().slice(-1) + '.png'),
+              name: channelAttributes[user.uid].value
             }
-          });
-
-          const usersToBeAdded = remoteUserInfoArray.filter(remoteUserInfo => {
-            return !userListArray.some(userList => userList.uid == remoteUserInfo.uid);
-          });
-
-          if (usersToBeAdded !== undefined && usersToBeAdded) {
-            usersToBeAdded.forEach(item => {
-              this.userList.push({ uid: item.uid, name: item.name.value, online: false });
-              this.allData[item.uid] = {
-                src: require('../../img/avatar' + item.uid.toString().slice(-1) + '.png'),
-                name: item.name.value
-              }
-            })
           }
         }
       })
       this.rtc.client.on("user-left", async (user, reason) => {
         if (this.allData[user.uid]) {
           delete this.allData[user.uid];
-          this.userList.splice(this.userList.indexOf(user.uid), 1);
+          this.userList.splice(this.hostList.indexOf(user.uid), 1);
           this.hostList.splice(this.hostList.indexOf(user.uid), 1);
         }
       })
@@ -630,9 +637,11 @@ export default {
       this.left = false;
       this.join = false;
       this.rtc.localAudioTrack.close();
+      await this.rtmMemberLeft()
       await this.rtc.client.leave();
       await this.rtmChannel.leave();
       await this.rtmClient.logout();
+      this.uid = '';
     },
     async getBuilderTokens(callBack) {
       axios.post(`/api/v1/projects/${VUE_APP_ID}/rtsc/speech-to-text/builderTokens`, { instanceId: this.options.channel }).then((res) => {
@@ -825,7 +834,7 @@ export default {
             flag = true;
           }
         })
-        if(!flag){
+        if(!flag&&this.allData[textstream.uid]){
           this.simpletextMetting.push({
             name: this.allData[textstream.uid].name ,
             uid: textstream.uid,
@@ -843,9 +852,9 @@ export default {
           stringBuilder += ' '
         }
         stringBuilder += item
-        if (this.isSentenceBoundaryWord(item)) {
-          stringBuilder += '</br>'
-        }
+        // if (this.isSentenceBoundaryWord(item)) {
+        //   stringBuilder += '</br>'
+        // }
       })
 
       nonFinalList.forEach(item => {
@@ -853,9 +862,9 @@ export default {
           stringBuilder += ' '
         }
         stringBuilder += item
-        if (this.isSentenceBoundaryWord(item)) {
-          stringBuilder += '</br>'
-        }
+        // if (this.isSentenceBoundaryWord(item)) {
+        //   stringBuilder += '</br>'
+        // }
       })
       if (this.allData[textstream.uid]) {
         this.allData[textstream.uid].stringBuilder = stringBuilder;
