@@ -203,7 +203,7 @@
       </el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleText">Full Transcription</el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleTextMeeting">Conversation</el-button>
-      <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content Filter</el-button>
+      <!-- <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content Filter</el-button> -->
       <el-button size="mini" v-show="false" type="primary" plain @click="queryFanl" :disabled="!taskId">Query status
       </el-button>
     </div>
