@@ -607,7 +607,7 @@ export default {
       const uid = await this.rtc.client.join(this.appId, this.options.channel, this.token, this.uid);
       this.join = true;
       this.uid = uid;
-      this.hostList.push(uid)
+      this.hostList.unshift(uid)
       const userName = this.options.userName;
       const userId = uid.toString();
 
