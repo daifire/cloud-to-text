@@ -545,7 +545,13 @@ export default {
       }).catch(error => {
         console.log("channel RTM failed")
       });
-
+      let str = new Date().getTime().toString().substring(4);
+      this.uid =Number(str);
+      let userName = this.options.userName;
+      let userId= this.uid.toString();
+      window.userInfo = {};
+      userInfo[userId] = userName;
+      await this.rtmClient.addOrUpdateChannelAttributes(rtmChannel.channelId, userInfo);
       this.rtc.client.on("user-published", async (user, mediaType) => {
         let res = await this.rtc.client.subscribe(user, mediaType);
         const userId = user.uid.toString();
@@ -560,36 +566,36 @@ export default {
       this.rtc.client.on("user-joined", async (user) => {
         if (![1000, 2000].includes(user.uid)) {
           this.hostList.push(user.uid);
-          const channelAttributes = await this.rtmClient.getChannelAttributes(this.options.channel);
-          console.log(channelAttributes)
-          // const userListArray = JSON.parse(JSON.stringify(this.userList));
-          // const remoteUserInfoArray = Object.keys(channelAttributes).map(key => {
-          //   return {
-          //     uid: key,
-          //     name: channelAttributes[key]
-          //   }
-          // });
-          // console.log(remoteUserInfoArray)
-          // const usersToBeAdded = remoteUserInfoArray.filter(remoteUserInfo => {
-          //   return !userListArray.some(userList => userList.uid == remoteUserInfo.uid);
-          // });
-          // console.log(usersToBeAdded)
-          // if (usersToBeAdded !== undefined && usersToBeAdded) {
-          //   usersToBeAdded.forEach(item => {
-          //     this.userList.push({ uid: item.uid, name: item.name.value, online: false });
-          //     this.allData[item.uid] = {
-          //       src: require('../../img/avatar' + item.uid.toString().slice(-1) + '.png'),
-          //       name: item.name.value
-          //     }
-          //   })
-          // }
-          if(channelAttributes[user.uid]){
-            this.userList.push({ uid: user.uid, name: channelAttributes[user.uid].value, online: false })
-            this.allData[user.uid] = {
-              src: require('../../img/avatar' + user.uid.toString().slice(-1) + '.png'),
-              name: channelAttributes[user.uid].value
+            const channelAttributes = await this.rtmClient.getChannelAttributes(this.options.channel+'');
+            console.log(channelAttributes)
+            // const userListArray = JSON.parse(JSON.stringify(this.userList));
+            // const remoteUserInfoArray = Object.keys(channelAttributes).map(key => {
+            //   return {
+            //     uid: key,
+            //     name: channelAttributes[key]
+            //   }
+            // });
+            // console.log(remoteUserInfoArray)
+            // const usersToBeAdded = remoteUserInfoArray.filter(remoteUserInfo => {
+            //   return !userListArray.some(userList => userList.uid == remoteUserInfo.uid);
+            // });
+            // console.log(usersToBeAdded)
+            // if (usersToBeAdded !== undefined && usersToBeAdded) {
+            //   usersToBeAdded.forEach(item => {
+            //     this.userList.push({ uid: item.uid, name: item.name.value, online: false });
+            //     this.allData[item.uid] = {
+            //       src: require('../../img/avatar' + item.uid.toString().slice(-1) + '.png'),
+            //       name: item.name.value
+            //     }
+            //   })
+            // }
+            if(channelAttributes[user.uid]){
+              this.userList.push({ uid: user.uid, name: channelAttributes[user.uid].value, online: false })
+              this.allData[user.uid] = {
+                src: require('../../img/avatar' + user.uid.toString().slice(-1) + '.png'),
+                name: channelAttributes[user.uid].value
+              }
             }
-          }
         }
       })
       this.rtc.client.on("user-left", async (user, reason) => {
@@ -607,15 +613,15 @@ export default {
     async joinRoom(rtmChannel) {
       const uid = await this.rtc.client.join(this.appId, this.options.channel, this.token, this.uid);
       this.join = true;
-      this.uid = uid;
+      // this.uid = uid;
       this.hostList.unshift(uid)
       const userName = this.options.userName;
       const userId = uid.toString();
 
-      window.userInfo = {};
-      userInfo[userId] = userName;
+      // window.userInfo = {};
+      // userInfo[userId] = userName;
 
-      await this.rtmClient.addOrUpdateChannelAttributes(rtmChannel.channelId, userInfo);
+      // await this.rtmClient.addOrUpdateChannelAttributes(rtmChannel.channelId, userInfo);
 
       this.userList.unshift({ uid: userId, name: userName, online: false });
 
