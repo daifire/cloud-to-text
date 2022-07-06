@@ -359,6 +359,7 @@ export default {
     }
   },
   created() {
+    console.log('version 1')
     if(window.screen.width<500){
       this.isMobile = true
     }
