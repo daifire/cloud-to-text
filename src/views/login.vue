@@ -322,7 +322,7 @@ export default {
       tokenName: '',
       rtmClient: '',
       options: {
-        channel: 'STT',
+        channel: '',
         role: 'host',
         userName: '',
         AEC: true,
