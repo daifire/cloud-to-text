@@ -322,7 +322,7 @@ export default {
       tokenName: '',
       rtmClient: '',
       options: {
-        channel: '',
+        channel: 'STT',
         role: 'host',
         userName: '',
         AEC: true,
@@ -359,7 +359,7 @@ export default {
     }
   },
   created() {
-    console.log('version 1')
+    console.log('version 2')
     if(window.screen.width<500){
       this.isMobile = true
     }
@@ -515,7 +515,9 @@ export default {
       })
     },
     async rtmMemberLeft(){
-      await this.rtmClient.deleteChannelAttributesByKeys(this.options.channel, [this.uid.toString()]);
+      if(this.uid&&this.options.channel){
+        await this.rtmClient.deleteChannelAttributesByKeys(this.options.channel, [this.uid.toString()]);
+      }
     },
     async startBasicCall() {
       AgoraRTC.setLogLevel(4)
@@ -536,7 +538,7 @@ export default {
 
       const rtmChannel = await this.rtmClient.createChannel(this.options.channel);
       this.rtmChannel = rtmChannel;
-
+      // console.log(rtmChannel)
       // rtmChannel.on('MemberJoined', () => this.rtmMemberJoined(this.options.channel));
       // rtmChannel.on('MemberLeft', () => this.rtmMemberLeft(this.uid));
 
@@ -554,7 +556,7 @@ export default {
       await this.rtmClient.addOrUpdateChannelAttributes(rtmChannel.channelId, userInfo);
       this.rtc.client.on("user-published", async (user, mediaType) => {
         let res = await this.rtc.client.subscribe(user, mediaType);
-        const userId = user.uid.toString();
+        let userId = user.uid.toString();
         if (mediaType === "audio") {
           const remoteAudioTrack = user.audioTrack;
           remoteAudioTrack.play();
@@ -566,8 +568,9 @@ export default {
       this.rtc.client.on("user-joined", async (user) => {
         if (![1000, 2000].includes(user.uid)) {
           this.hostList.push(user.uid);
-            const channelAttributes = await this.rtmClient.getChannelAttributes(this.options.channel+'');
-            console.log(channelAttributes)
+            const channelAttributes = await this.rtmClient.getChannelAttributes(this.options.channel);
+            console.log('channelAttributes',channelAttributes)
+            console.log('user join '+user.uid)
             // const userListArray = JSON.parse(JSON.stringify(this.userList));
             // const remoteUserInfoArray = Object.keys(channelAttributes).map(key => {
             //   return {
@@ -599,6 +602,7 @@ export default {
         }
       })
       this.rtc.client.on("user-left", async (user, reason) => {
+        console.log('user left '+user.uid)
         if (this.allData[user.uid]) {
           delete this.allData[user.uid];
           this.userList.splice(this.hostList.indexOf(user.uid), 1);
@@ -608,10 +612,11 @@ export default {
       this.rtc.client.on("stream-message", async (uid, payload) => {
         this.uint8Array(payload)
       })
-      this.joinRoom(rtmChannel)
+      await this.joinRoom(rtmChannel)
     },
     async joinRoom(rtmChannel) {
       const uid = await this.rtc.client.join(this.appId, this.options.channel, this.token, this.uid);
+      console.log('self uid '+uid)
       this.join = true;
       // this.uid = uid;
       this.hostList.unshift(uid)
@@ -876,6 +881,7 @@ export default {
       if (this.allData[textstream.uid]) {
         this.allData[textstream.uid].stringBuilder = stringBuilder;
       }
+      console.log(this.allData[textstream.uid].name,stringBuilder)
       this.$forceUpdate()
     },
     // Determines if a word returned from the service is punctuation.
