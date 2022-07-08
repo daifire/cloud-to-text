@@ -84,14 +84,6 @@
           </div>
         </div>
       </div>
-      <div style="position:fixed;top:580px;left:50%;margin-left: -24px;width: 200px;text-align: left;">
-        <el-button v-show="join" icon="el-icon-microphone" style="width:auto;font-size:30px;" circle v-if="start" @click="startFanl" size="mini" type="primary"  title="Start Transcription">
-        </el-button>
-        <el-button v-show="join" icon="el-icon-turn-off-microphone" v-if="left" style="width:auto;background:#cb4c38;font-size:30px;border:#cb4c38;" circle @click="stopFanl" size="mini" type="primary" title="Stop Transcription">
-        </el-button>
-        <span style="font-size:14px;color:#000;margin-left:20px;vertical-align: 5px;" v-if="left">recording...</span>
-        <span style="font-size:14px;color:#000;margin-left:20px;vertical-align: 5px;" v-if="start">click to start</span>
-      </div>
     </div>
     <div class="fs24 mobile1 mobile2" v-if="index == 2 && isMobile">
       <div class="topH">
@@ -196,6 +188,17 @@
       </el-tabs>
     </div>
     <div class="buttonList" v-if="index == 2 && !isMobile">
+      <!-- <div class='buttonBox'>
+          <el-button v-show="join" icon="el-icon-microphone" style="width:auto;font-size:30px;" circle v-if="start" @click="startFanl" size="mini" type="primary"  title="Start Transcription"></el-button>
+          <span style="font-size:12px;color:#000;vertical-align: 5px;" v-if="start">click to start</span>
+
+      </div>
+      <div class='buttonBox'>
+          <el-button v-show="join" icon="el-icon-turn-off-microphone" v-if="left" style="width:auto;background:#cb4c38;font-size:30px;border:#cb4c38;" circle @click="stopFanl" size="mini" type="primary" title="Stop Transcription"></el-button>
+          <span style="font-size:12px;color:#000;vertical-align: 5px;" v-if="left">recording...</span>
+      </div> -->
+      <el-button v-show="join" icon="el-icon-microphone" style="width:auto;font-size:30px;" circle v-if="start" @click="startFanl" size="mini" type="primary"  title="Start Transcription"></el-button>
+      <el-button v-show="join" icon="el-icon-turn-off-microphone" v-if="left" style="width:auto;background:#cb4c38;font-size:30px;border:#cb4c38;" circle @click="stopFanl" size="mini" type="primary" title="Stop Transcription"></el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="back">Leave Room</el-button>
       <el-button size="mini" v-show="false" type="primary" plain @click="fanl" v-if="start">load transcription
       </el-button>
@@ -355,11 +358,14 @@ export default {
       drawerFanlProfanity: false,
       isCollapse: false,
       isMobile:false,
-      activeName:'TranscribeLive'
+      activeName:'TranscribeLive',
+      // customerKey:'916536139f094d2d90a440b074e79e17',
+      // customerSecret:'98a1f6e8c18b4f818df2cfb99db40c47',
+      authorizationField:'Basic OTE2NTM2MTM5ZjA5NGQyZDkwYTQ0MGIwNzRlNzllMTc6OThhMWY2ZThjMThiNGY4MThkZjJjZmI5OWRiNDBjNDc=',
     }
   },
   created() {
-    console.log('version 2')
+    console.log('version 3')
     if(window.screen.width<500){
       this.isMobile = true
     }
@@ -656,7 +662,7 @@ export default {
       this.uid = '';
     },
     async getBuilderTokens(callBack) {
-      axios.post(`/api/v1/projects/${VUE_APP_ID}/rtsc/speech-to-text/builderTokens`, { instanceId: this.options.channel }).then((res) => {
+      axios.post(`/api/v1/projects/${VUE_APP_ID}/rtsc/speech-to-text/builderTokens`, { instanceId: this.options.channel },{headers: {'Authorization':this.authorizationField}}).then((res) => {
         if (res.status == 200) {
           this.tokenName = res.data.tokenName;
           this.createTs = res.data.createTs;
@@ -713,7 +719,7 @@ export default {
               }
             }
           }
-        }).then((res) => {
+        },{headers: {'Authorization':this.authorizationField}}).then((res) => {
           if (res.status == 200) {
             this.start = false;
             this.loading = false;
@@ -746,7 +752,8 @@ export default {
         method: 'delete',
         keepalive: true,
         headers: {
-          'content-type': 'application/json'
+          'content-type': 'application/json',
+          'Authorization':this.authorizationField,
         }
       })
       let data = await res.text();
@@ -771,7 +778,8 @@ export default {
       fetch(`/api/v1/projects/${VUE_APP_ID}/rtsc/speech-to-text/tasks/${this.taskId}?builderToken=${this.tokenName}`, {
         method: 'get',
         headers: {
-          'content-type': 'application/json'
+          'content-type': 'application/json',
+          'Authorization':this.authorizationField,
         }
       }).then(function (data) {
         return data.text();
@@ -958,7 +966,7 @@ export default {
 .mobile {
   width: 100%;
   max-width: 375px;
-  height: 667px;
+  height: 790px;
   margin: 20px auto;
   box-shadow: 1px 0px 10px 0px;
   display: flex;
@@ -978,7 +986,7 @@ export default {
 
 .mobile1 {
   width: 375px;
-  height: 667px;
+  height: 790px;
   overflow: auto;
   overflow-x: hidden;
   margin: 20px auto;
@@ -987,7 +995,6 @@ export default {
   position: relative;
   .content {
     padding-top: 100px;
-    padding-bottom: 100px;
     .item {
       padding: 10px;
       display: flex;
@@ -1053,6 +1060,13 @@ export default {
     width: 120px;
     margin-bottom: 10px;
     margin-left: 0;
+  }
+  .buttonBox{
+    width: 120px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-around;
   }
 }
 
