@@ -180,11 +180,11 @@
             </div>
           </div>
         </el-tab-pane>
-        <!-- <el-tab-pane label="Content Filter" name="Content Filter">
+        <el-tab-pane label="Content Filter" name="Content Filter">
           <div class="drawerContent">
             <p v-html="profanityStr"></p>
           </div>
-        </el-tab-pane> -->
+        </el-tab-pane>
       </el-tabs>
     </div>
     <div class="buttonList" v-if="index == 2 && !isMobile">
@@ -206,7 +206,7 @@
       </el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleText">Full Transcription</el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleTextMeeting">Conversation</el-button>
-      <!-- <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content Filter</el-button> -->
+      <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content Filter</el-button>
       <el-button size="mini" v-show="false" type="primary" plain @click="queryFanl" :disabled="!taskId">Query status
       </el-button>
     </div>
