@@ -880,8 +880,8 @@ export default {
       })
       if (this.allData[textstream.uid]) {
         this.allData[textstream.uid].stringBuilder = stringBuilder;
+        console.log(this.allData[textstream.uid].name,stringBuilder)
       }
-      console.log(this.allData[textstream.uid].name,stringBuilder)
       this.$forceUpdate()
     },
     // Determines if a word returned from the service is punctuation.
