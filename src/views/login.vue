@@ -806,7 +806,7 @@ export default {
       let text2 = '';
       let text3 = '';
       let text4 = '';//fanityWord
-      words.forEach(item => {
+      words.forEach((item) => {
         if (this.isProfanityWord(item.text)) {
           if (item.isFinal) {
             text4 += item.text.split(':')[0].split('[')[1] + ' -> ' + item.text.split(':')[1].split(']')[0] + " ; ";
@@ -878,6 +878,9 @@ export default {
         //   stringBuilder += '</br>'
         // }
       })
+      if(stringBuilder[0]&&this.isPunctuationWord(stringBuilder[0])){
+        stringBuilder = stringBuilder.slice(1) 
+      }
       if (this.allData[textstream.uid]) {
         this.allData[textstream.uid].stringBuilder = stringBuilder;
         console.log(this.allData[textstream.uid].name,stringBuilder)
@@ -984,7 +987,7 @@ export default {
   position: relative;
   .content {
     padding-top: 100px;
-
+    padding-bottom: 100px;
     .item {
       padding: 10px;
       display: flex;
