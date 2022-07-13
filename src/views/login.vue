@@ -193,7 +193,7 @@
       </el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleText">Full Transcription</el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleTextMeeting">Conversation</el-button>
-      <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content Filter</el-button>
+      <!-- <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content Filter</el-button> -->
       <el-button size="mini" v-show="false" type="primary" plain @click="queryFanl" :disabled="!taskId">Query status
       </el-button>
     </div>
@@ -220,11 +220,11 @@
         <p>{{ this.simpletext }}</p>
       </div>
     </el-drawer>
-    <el-drawer title="Conversation(Content Filter)" :visible.sync="drawerFanlProfanity">
+    <!-- <el-drawer title="Conversation(Content Filter)" :visible.sync="drawerFanlProfanity">
       <div class="drawerContent">
         <p v-html="profanityStr"></p>
       </div>
-    </el-drawer>
+    </el-drawer> -->
     <el-drawer title="Conversation" :visible.sync="drawerFanlSimpleMetting">
       <div class="drawerContent">
         <div v-for='(item, i) in simpletextMetting' :key="i">
