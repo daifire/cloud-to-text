@@ -61,7 +61,7 @@
           <span>Room Name : {{ this.options.channel }}</span>
         </div>
         <div v-for="(item, index) in userList" :key="index">
-          <div class="itemContent" v-if="index < 4">
+          <div class="itemContent" v-if="index < 3">
             <div class="top">
               <div class="first">
                 <el-avatar :src="allData[item.uid].src"></el-avatar>
@@ -106,7 +106,7 @@
                   </div>
                 </div>
               </div>
-              <div class="itemContent" v-if="index < 5 && index > 0">
+              <div class="itemContent" v-if="index < 4 && index > 0">
                 <div class="top">
                   <div class="first">
                     <el-avatar :src="allData[item.uid].src"></el-avatar>
@@ -127,7 +127,7 @@
               <span>Room Name : {{ this.options.channel }}</span>
             </div>
             <div v-for="(item, index) in userList" :key="index">
-              <div class="itemContent" v-if="index < 4">
+              <div class="itemContent" v-if="index < 3">
                 <div class="top">
                   <div class="first">
                     <el-avatar :src="allData[item.uid].src"></el-avatar>
@@ -514,10 +514,15 @@ export default {
     async rtmMessageFromPeer(message, peerId) {
       if (message.text === "STT started") {
         this.peerStartedSTT = true;
+        this.start = true;
       }
       else {
         this.peerStartedSTT = false;
+        this.start = false;
       }
+    },
+    rtmMemberJoined(isSttStarted){
+        this.sendStartSTTNotificationToPeers(isSttStarted);
     },
     async startBasicCall() {
       AgoraRTC.setLogLevel(4)
@@ -536,6 +541,7 @@ export default {
       }).catch(error => {
         console.log("RTM join failed");
       })
+
       this.rtmClient.on('MessageFromPeer', async (text, peerId) => this.rtmMessageFromPeer(text, peerId));
 
       const rtmChannel = await this.rtmClient.createChannel(this.options.channel);
@@ -546,6 +552,7 @@ export default {
         console.log("channel RTM failed")
       });
 
+      rtmChannel.on('MemberJoined', ()=> this.rtmMemberJoined(this.start));
       let str = new Date().getTime().toString().substring(4);
       this.uid = Number(str);
       let userName = this.options.userName;
@@ -667,29 +674,25 @@ export default {
     },
 
     async sendStartSTTNotificationToPeers(hasStarted) {
-      const remoteUserInfo = await this.rtmClient.getChannelAttributes(this.options.channel);
-
-      const remoteUserInfoArray = Object.keys(remoteUserInfo).map(key => {
-        return {
-          uid: key,
-          name: remoteUserInfo[key]
-        }
-      });
 
       this.peerStartedSTT = hasStarted;
 
-      remoteUserInfoArray && remoteUserInfoArray.forEach(async (member) => {
-        const memberName = member.name.value.toString();
-        await this.rtmClient.sendMessageToPeer({
-          text: hasStarted ? "STT started" : "STT stopped"
-        },
-          memberName,
-        ).then(
-          console.log("message has been sent")
-        ).catch((error) => {
-          console.log("error while sending message", error);
-        });
-      });
+      this.rtmChannel.getMembers().then((memberNames) => {
+        console.log("members in the channel are" + memberNames);
+        memberNames.forEach(async (member)=> {
+          if (this.options.userName != member) {
+            await this.rtmClient.sendMessageToPeer({
+              text: hasStarted ? "STT started" : "STT stopped"
+            },
+              member,
+            ).then(
+              console.log("message has been sent")
+            ).catch((error) => {
+              console.log("error while sending message", error);
+            });
+          }
+        })
+      })
     },
     async startFanl() {
       this.loading = true;
@@ -765,6 +768,8 @@ export default {
       let that = this;
       this.loading = true;
       this.peerStartedSTT = false;
+      await this.sendStartSTTNotificationToPeers(false);
+
       let res = await fetch(`/api/v1/projects/${VUE_APP_ID}/rtsc/speech-to-text/tasks/${this.taskId}?builderToken=${this.tokenName}`, {
         method: 'delete',
         keepalive: true,
@@ -776,7 +781,6 @@ export default {
 
       let data = await res.text();
       let datas = JSON.parse(data);
-      await this.sendStartSTTNotificationToPeers(false);
 
       if (!datas.message) {
         that.start = false;
@@ -786,6 +790,7 @@ export default {
         that.stopWorker(that.pollingWorker);
       } else {
         that.loading = false;
+        that.start = false;
         that.$message.error(datas.message ? datas.message : 'network anomaly')
       }
     },
@@ -901,6 +906,7 @@ export default {
           stringBuilder += ' '
         }
         stringBuilder += item
+        // }
       })
       if (stringBuilder[0] && this.isPunctuationWord(stringBuilder[0])) {
         stringBuilder = stringBuilder.slice(1)
