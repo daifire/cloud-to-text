@@ -3,11 +3,13 @@
     <div class="fs24 mobile" v-if="index == 1">
       <el-button class="setting" icon="el-icon-setting" circle @click="dialogFormVisible = true"></el-button>
       <el-form ref="form" :model="options" label-width="110px" :rules="rules" style="margin-top: -7rem;">
-        <el-form-item label="User Name:" prop="userName" >
-          <el-input v-model="options.userName" placeholder="Enter Your Name"  @input="(val) => (options.userName = options.userName.toUpperCase())"></el-input>
+        <el-form-item label="User Name:" prop="userName">
+          <el-input v-model="options.userName" placeholder="Enter Your Name"
+            @input="(val) => (options.userName = options.userName.toUpperCase())"></el-input>
         </el-form-item>
         <el-form-item label="Room Name:" prop="channel">
-          <el-input v-model="options.channel" placeholder="Enter Room Name" suffix-icon="el-icon-s-home" @input="(val) => (options.channel = options.channel.toUpperCase())"></el-input>
+          <el-input v-model="options.channel" placeholder="Enter Room Name" suffix-icon="el-icon-s-home"
+            @input="(val) => (options.channel = options.channel.toUpperCase())"></el-input>
         </el-form-item>
         <el-form-item label="Join As:">
           <el-radio-group v-model="options.role">
@@ -23,7 +25,7 @@
     <div class="fs24 mobile1" v-if="index == 2 && !isMobile">
       <div class=content v-if="options.role == 'audience'">
         <div>
-          <span>Room Name : {{this.options.channel}}</span>
+          <span>Room Name : {{ this.options.channel }}</span>
         </div>
         <div v-for="(item, index) in userList" :key="index">
           <div class="item" v-if="index == 0">
@@ -33,11 +35,7 @@
             <div>
               <div id="wrapperDiv">
                 <div id="div1" style="float:left"><span>User Name: {{ item.name
-                    }}</span><span> (Self,Audience) </span>
-                  <div id="div2" style="float:right">
-                    <el-button v-if="left" circle type="success"
-                      style="padding-left: 2px;padding-bottom:2px;margin-left:8px"></el-button>
-                  </div>
+                }}</span><span> (Self,Audience) </span>
                 </div>
               </div>
             </div>
@@ -59,8 +57,8 @@
         </div>
       </div>
       <div class=content v-if="options.role == 'host'">
-       <div>
-          <span>Room Name : {{this.options.channel}}</span>
+        <div>
+          <span>Room Name : {{ this.options.channel }}</span>
         </div>
         <div v-for="(item, index) in userList" :key="index">
           <div class="itemContent" v-if="index < 4">
@@ -69,12 +67,8 @@
                 <el-avatar :src="allData[item.uid].src"></el-avatar>
               </div>
               <div id="wrapperDiv">
-                <div id="div1" style="float:left"><span>User Name: {{ item.name }}</span><span
-                    v-if="index == 0"> (Self,Host)</span>
-                  <div id="div2" style="float:right">
-                    <el-button v-if="left" circle type="success"
-                      style="padding-left: 2px;padding-bottom:2px;margin-left:8px"></el-button>
-                  </div>
+                <div id="div1" style="float:left"><span>User Name: {{ item.name }}</span><span v-if="index == 0">
+                    (Self,Host)</span>
                 </div>
               </div>
             </div>
@@ -88,15 +82,16 @@
     <div class="fs24 mobile1 mobile2" v-if="index == 2 && isMobile">
       <div class="topH">
         <div class="header">
-          <i  class="el-icon-plus" :class="isCollapse?'unfold close' :'unfold'" @click="changeOpen"></i>
+          <i class="el-icon-plus" :class="isCollapse ? 'unfold close' : 'unfold'" @click="changeOpen"></i>
           <span slot="label" @click="back" style="font-size: 15px;float: right;margin-right: 20px;"> Leave Room </span>
         </div>
       </div>
-      <el-tabs tab-position="left" :class="isCollapse?'tabs':'tabs tabs-close'"  v-model="activeName" @tab-click="handleClick">
+      <el-tabs tab-position="left" :class="isCollapse ? 'tabs' : 'tabs tabs-close'" v-model="activeName"
+        @tab-click="handleClick">
         <el-tab-pane label="TranscribeLive" name="TranscribeLive" style="height:100%">
           <div class=content v-if="options.role == 'audience'">
             <div>
-              <span>Room Name : {{this.options.channel}}</span>
+              <span>Room Name : {{ this.options.channel }}</span>
             </div>
             <div v-for="(item, index) in userList" :key="index">
               <div class="item" v-if="index == 0">
@@ -107,9 +102,6 @@
                   <div id="wrapperDiv">
                     <div id="div1" style="float:left"><span>User Name: {{ item.name
                     }}</span><span> (Self,Audience) </span>
-                      <div id="div2" style="float:right">
-                        <el-button v-if="left" circle type="success" style="padding-left: 2px;padding-bottom:2px;margin-left:8px"></el-button>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -132,7 +124,7 @@
           </div>
           <div class=content v-if="options.role == 'host'">
             <div>
-              <span>Room Name : {{this.options.channel}}</span>
+              <span>Room Name : {{ this.options.channel }}</span>
             </div>
             <div v-for="(item, index) in userList" :key="index">
               <div class="itemContent" v-if="index < 4">
@@ -141,12 +133,8 @@
                     <el-avatar :src="allData[item.uid].src"></el-avatar>
                   </div>
                   <div id="wrapperDiv">
-                    <div id="div1" style="float:left"><span>User Name: {{ item.name }}</span><span
-                      v-if="index == 0"> (Self,Host)</span>
-                      <div id="div2" style="float:right">
-                        <el-button v-if="left" circle type="success"
-                        style="padding-left: 2px;padding-bottom:2px;margin-left:8px"></el-button>
-                      </div>
+                    <div id="div1" style="float:left"><span>User Name: {{ item.name }}</span><span v-if="index == 0">
+                        (Self,Host)</span>
                     </div>
                   </div>
                 </div>
@@ -157,12 +145,17 @@
             </div>
           </div>
           <div style="position: fixed;top: 80vh;left: 50%;margin-left: -24px;width: 200px;text-align: left;">
-            <el-button v-show="join" icon="el-icon-microphone" style="width:auto;font-size:30px;" circle v-if="start" @click="startFanl" size="mini" type="primary"  title="Start Transcription">
+            <el-button icon="el-icon-microphone" style="width:auto;font-size:30px;" circle v-if="peerStartedSTT"
+              @click="startFanl" size="mini" type="primary" title="Start Transcription">
             </el-button>
-            <el-button v-show="join" icon="el-icon-turn-off-microphone" v-if="left" style="width:auto;background:#cb4c38;font-size:30px;border:#cb4c38;" circle @click="stopFanl" size="mini" type="primary" title="Stop Transcription">
+            <el-button icon="el-icon-turn-off-microphone" v-else
+              style="width:auto;background:#cb4c38;font-size:30px;border:#cb4c38;" circle @click="stopFanl" size="mini"
+              type="primary" title="Stop Transcription">
             </el-button>
-            <span style="font-size:14px;color:#000;margin-left:20px;vertical-align: 5px;" v-if="left">recording...</span>
-            <span style="font-size:14px;color:#000;margin-left:20px;vertical-align: 5px;" v-if="start">click to start</span>
+            <span style="font-size:14px;color:#000;margin-left:20px;vertical-align: 5px;"
+              >recording...</span>
+            <span style="font-size:14px;color:#000;margin-left:20px;vertical-align: 5px;" v-if="start">click to
+              start</span>
           </div>
         </el-tab-pane>
         <el-tab-pane label="Full Transcription" name="Full Transcription">
@@ -188,17 +181,11 @@
       </el-tabs>
     </div>
     <div class="buttonList" v-if="index == 2 && !isMobile">
-      <!-- <div class='buttonBox'>
-          <el-button v-show="join" icon="el-icon-microphone" style="width:auto;font-size:30px;" circle v-if="start" @click="startFanl" size="mini" type="primary"  title="Start Transcription"></el-button>
-          <span style="font-size:12px;color:#000;vertical-align: 5px;" v-if="start">click to start</span>
-
-      </div>
-      <div class='buttonBox'>
-          <el-button v-show="join" icon="el-icon-turn-off-microphone" v-if="left" style="width:auto;background:#cb4c38;font-size:30px;border:#cb4c38;" circle @click="stopFanl" size="mini" type="primary" title="Stop Transcription"></el-button>
-          <span style="font-size:12px;color:#000;vertical-align: 5px;" v-if="left">recording...</span>
-      </div> -->
-      <el-button v-show="join" icon="el-icon-microphone" style="width:auto;font-size:30px;" circle v-if="start" @click="startFanl" size="mini" type="primary"  title="Start Transcription"></el-button>
-      <el-button v-show="join" icon="el-icon-turn-off-microphone" v-if="left" style="width:auto;background:#cb4c38;font-size:30px;border:#cb4c38;" circle @click="stopFanl" size="mini" type="primary" title="Stop Transcription"></el-button>
+      <el-button v-if="peerStartedSTT" icon="el-icon-microphone"
+        style="width:auto;background:#cb4c38;font-size:30px;border:#cb4c38;" circle @click="stopFanl" size="mini"
+        type="primary" title="Stop Transcription"></el-button>
+      <el-button v-else icon="el-icon-turn-off-microphone" style="width:auto;font-size:30px;" circle @click="startFanl"
+        size="mini" type="primary" title="Start Transcription"></el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="back">Leave Room</el-button>
       <el-button size="mini" v-show="false" type="primary" plain @click="fanl" v-if="start">load transcription
       </el-button>
@@ -302,6 +289,7 @@ import protoRoot from "@/proto/proto.js";
 import axios from 'axios'
 import _ from "lodash";
 import { async } from "q";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const VUE_APP_ID = process.env.VUE_APP_ID;
 export default {
@@ -317,13 +305,13 @@ export default {
       uid: null,
       appId: VUE_APP_ID,
       start: true,
-      left: false,
       loading: false,
       taskId: '',
       join: false,
       index: 1,
       tokenName: '',
       rtmClient: '',
+      peerStartedSTT: false,
       options: {
         channel: '',
         role: 'host',
@@ -357,16 +345,16 @@ export default {
       profanityStr: '',
       drawerFanlProfanity: false,
       isCollapse: false,
-      isMobile:false,
-      activeName:'TranscribeLive',
+      isMobile: false,
+      activeName: 'TranscribeLive',
       // customerKey:'916536139f094d2d90a440b074e79e17',
       // customerSecret:'98a1f6e8c18b4f818df2cfb99db40c47',
-      authorizationField:'Basic OTE2NTM2MTM5ZjA5NGQyZDkwYTQ0MGIwNzRlNzllMTc6OThhMWY2ZThjMThiNGY4MThkZjJjZmI5OWRiNDBjNDc=',
+      authorizationField: 'Basic OTE2NTM2MTM5ZjA5NGQyZDkwYTQ0MGIwNzRlNzllMTc6OThhMWY2ZThjMThiNGY4MThkZjJjZmI5OWRiNDBjNDc=',
     }
   },
   created() {
     console.log('version 3')
-    if(window.screen.width<500){
+    if (window.screen.width < 500) {
       this.isMobile = true
     }
   },
@@ -384,10 +372,10 @@ export default {
     // window.removeEventListener('beforeunload', e => this.beforeunloadHandler(e))
   },
   methods: {
-    changeOpen(){
+    changeOpen() {
       this.isCollapse = !this.isCollapse;
     },
-    handleClick(){
+    handleClick() {
       this.isCollapse = false;
     },
     clearFanl() {
@@ -476,8 +464,7 @@ export default {
           this.index = 2;
           this.outputStreamFanle = localStorage.getItem("outputStreamFanle") ? localStorage.getItem("outputStreamFanle") : ''
           this.outputStreamNoFanle = localStorage.getItem("outputStreamNoFanle") ? localStorage.getItem("outputStreamNoFanle") : ''
-          this.start = true;
-          this.left = false;
+          this.start = false;
           this.tokenName = '';
           this.activeName = 'TranscribeLive'
           this.startBasicCall()
@@ -489,7 +476,6 @@ export default {
     back() {
       this.index = 1;
       this.start = false;
-      this.left = true;
       this.hostList = [];
       this.userList = [];
       this.beforeunloadHandler()
@@ -520,9 +506,17 @@ export default {
         }
       })
     },
-    async rtmMemberLeft(){
-      if(this.uid&&this.options.channel){
+    async rtmMemberLeft() {
+      if (this.uid && this.options.channel) {
         await this.rtmClient.deleteChannelAttributesByKeys(this.options.channel, [this.uid.toString()]);
+      }
+    },
+    async rtmMessageFromPeer(message, peerId) {
+      if (message.text === "STT started") {
+        this.peerStartedSTT = true;
+      }
+      else {
+        this.peerStartedSTT = false;
       }
     },
     async startBasicCall() {
@@ -538,28 +532,27 @@ export default {
 
       await this.rtmClient.login(rtmOptions).then(() => {
         console.log("RTM join success");
+        this.join =true;
       }).catch(error => {
         console.log("RTM join failed");
       })
+      this.rtmClient.on('MessageFromPeer', async (text, peerId) => this.rtmMessageFromPeer(text, peerId));
 
       const rtmChannel = await this.rtmClient.createChannel(this.options.channel);
       this.rtmChannel = rtmChannel;
-      // console.log(rtmChannel)
-      // rtmChannel.on('MemberJoined', () => this.rtmMemberJoined(this.options.channel));
-      // rtmChannel.on('MemberLeft', () => this.rtmMemberLeft(this.uid));
-
-      await rtmChannel.join().then(() => {
-        console.log("RTM");
+      await this.rtmChannel.join().then(() => {
+        console.log("RTM channel join success");
       }).catch(error => {
         console.log("channel RTM failed")
       });
+
       let str = new Date().getTime().toString().substring(4);
-      this.uid =Number(str);
+      this.uid = Number(str);
       let userName = this.options.userName;
-      let userId= this.uid.toString();
+      let userId = this.uid.toString();
       window.userInfo = {};
       userInfo[userId] = userName;
-      await this.rtmClient.addOrUpdateChannelAttributes(rtmChannel.channelId, userInfo);
+      await this.rtmClient.addOrUpdateChannelAttributes(this.rtmChannel.channelId, userInfo);
       this.rtc.client.on("user-published", async (user, mediaType) => {
         let res = await this.rtc.client.subscribe(user, mediaType);
         let userId = user.uid.toString();
@@ -574,41 +567,40 @@ export default {
       this.rtc.client.on("user-joined", async (user) => {
         if (![1000, 2000].includes(user.uid)) {
           this.hostList.push(user.uid);
-            const channelAttributes = await this.rtmClient.getChannelAttributes(this.options.channel);
-            console.log('channelAttributes',channelAttributes)
-            console.log('user join '+user.uid)
-            // const userListArray = JSON.parse(JSON.stringify(this.userList));
-            // const remoteUserInfoArray = Object.keys(channelAttributes).map(key => {
-            //   return {
-            //     uid: key,
-            //     name: channelAttributes[key]
-            //   }
-            // });
-            // console.log(remoteUserInfoArray)
-            // const usersToBeAdded = remoteUserInfoArray.filter(remoteUserInfo => {
-            //   return !userListArray.some(userList => userList.uid == remoteUserInfo.uid);
-            // });
-            // console.log(usersToBeAdded)
-            // if (usersToBeAdded !== undefined && usersToBeAdded) {
-            //   usersToBeAdded.forEach(item => {
-            //     this.userList.push({ uid: item.uid, name: item.name.value, online: false });
-            //     this.allData[item.uid] = {
-            //       src: require('../../img/avatar' + item.uid.toString().slice(-1) + '.png'),
-            //       name: item.name.value
-            //     }
-            //   })
-            // }
-            if(channelAttributes[user.uid]){
-              this.userList.push({ uid: user.uid, name: channelAttributes[user.uid].value, online: false })
-              this.allData[user.uid] = {
-                src: require('../../img/avatar' + user.uid.toString().slice(-1) + '.png'),
-                name: channelAttributes[user.uid].value
-              }
+          const channelAttributes = await this.rtmClient.getChannelAttributes(this.options.channel);
+          console.log('user join ' + user.uid)
+          // const userListArray = JSON.parse(JSON.stringify(this.userList));
+          // const remoteUserInfoArray = Object.keys(channelAttributes).map(key => {
+          //   return {
+          //     uid: key,
+          //     name: channelAttributes[key]
+          //   }
+          // });
+          // console.log(remoteUserInfoArray)
+          // const usersToBeAdded = remoteUserInfoArray.filter(remoteUserInfo => {
+          //   return !userListArray.some(userList => userList.uid == remoteUserInfo.uid);
+          // });
+          // console.log(usersToBeAdded)
+          // if (usersToBeAdded !== undefined && usersToBeAdded) {
+          //   usersToBeAdded.forEach(item => {
+          //     this.userList.push({ uid: item.uid, name: item.name.value, online: false });
+          //     this.allData[item.uid] = {
+          //       src: require('../../img/avatar' + item.uid.toString().slice(-1) + '.png'),
+          //       name: item.name.value
+          //     }
+          //   })
+          // }
+          if (channelAttributes[user.uid]) {
+            this.userList.push({ uid: user.uid, name: channelAttributes[user.uid].value, online: false })
+            this.allData[user.uid] = {
+              src: require('../../img/avatar' + user.uid.toString().slice(-1) + '.png'),
+              name: channelAttributes[user.uid].value
             }
+          }
         }
       })
       this.rtc.client.on("user-left", async (user, reason) => {
-        console.log('user left '+user.uid)
+        console.log('user left ' + user.uid)
         if (this.allData[user.uid]) {
           delete this.allData[user.uid];
           this.userList.splice(this.hostList.indexOf(user.uid), 1);
@@ -622,9 +614,7 @@ export default {
     },
     async joinRoom(rtmChannel) {
       const uid = await this.rtc.client.join(this.appId, this.options.channel, this.token, this.uid);
-      console.log('self uid '+uid)
-      this.join = true;
-      // this.uid = uid;
+      console.log('self uid ' + uid)
       this.hostList.unshift(uid)
       const userName = this.options.userName;
       const userId = uid.toString();
@@ -651,8 +641,7 @@ export default {
       }
     },
     async leaveRoom() {
-      this.start = true;
-      this.left = false;
+      this.start = false;
       this.join = false;
       this.rtc.localAudioTrack.close();
       await this.rtmMemberLeft()
@@ -662,7 +651,7 @@ export default {
       this.uid = '';
     },
     async getBuilderTokens(callBack) {
-      axios.post(`/api/v1/projects/${VUE_APP_ID}/rtsc/speech-to-text/builderTokens`, { instanceId: this.options.channel },{headers: {'Authorization':this.authorizationField}}).then((res) => {
+      axios.post(`/api/v1/projects/${VUE_APP_ID}/rtsc/speech-to-text/builderTokens`, { instanceId: this.options.channel }, { headers: { 'Authorization': this.authorizationField } }).then((res) => {
         if (res.status == 200) {
           this.tokenName = res.data.tokenName;
           this.createTs = res.data.createTs;
@@ -676,6 +665,32 @@ export default {
         this.$message.error(error.response.data.message ? error.response.data.message : '网络异常')
       })
     },
+
+    async sendStartSTTNotificationToPeers(hasStarted) {
+      const remoteUserInfo = await this.rtmClient.getChannelAttributes(this.options.channel);
+
+      const remoteUserInfoArray = Object.keys(remoteUserInfo).map(key => {
+        return {
+          uid: key,
+          name: remoteUserInfo[key]
+        }
+      });
+
+      this.peerStartedSTT = hasStarted;
+
+      remoteUserInfoArray && remoteUserInfoArray.forEach(async (member) => {
+        const memberName = member.name.value.toString();
+        await this.rtmClient.sendMessageToPeer({
+          text: hasStarted ? "STT started" : "STT stopped"
+        },
+          memberName,
+        ).then(
+          console.log("message has been sent")
+        ).catch((error) => {
+          console.log("error while sending message", error);
+        });
+      });
+    },
     async startFanl() {
       this.loading = true;
       this.simpletext = '';
@@ -683,6 +698,8 @@ export default {
       if (this.options.role == 'host') {
         await this.rtc.client.publish([this.rtc.localAudioTrack]);
       }
+
+      await this.sendStartSTTNotificationToPeers(true);
 
       if (!this.isOAverdue()) {
         axios.post(`/api/v1/projects/${VUE_APP_ID}/rtsc/speech-to-text/tasks?builderToken=${this.tokenName}`, {
@@ -719,11 +736,10 @@ export default {
               }
             }
           }
-        },{headers: {'Authorization':this.authorizationField}}).then((res) => {
+        }, { headers: { 'Authorization': this.authorizationField } }).then((res) => {
           if (res.status == 200) {
-            this.start = false;
+            this.start = true;
             this.loading = false;
-            this.left = true;
             this.taskId = res.data.taskId;
             this.createWorker(() => {
               if (this.taskId) {
@@ -733,38 +749,41 @@ export default {
             }, 600000)
           } else {
             this.loading = false;
+            this.start = false;
             this.$message.error('network anomaly')
           }
         }).catch(error => {
           this.loading = false;
-          this.start = true;
+          this.start = false;
           this.$message.error(error.response.data.message ? error.response.data.message : 'network anomaly')
         })
       } else {
         this.getBuilderTokens(1)
       }
-
     },
     async stopFanl() {
       let that = this;
       this.loading = true;
+      this.peerStartedSTT = false;
       let res = await fetch(`/api/v1/projects/${VUE_APP_ID}/rtsc/speech-to-text/tasks/${this.taskId}?builderToken=${this.tokenName}`, {
         method: 'delete',
         keepalive: true,
         headers: {
           'content-type': 'application/json',
-          'Authorization':this.authorizationField,
+          'Authorization': this.authorizationField,
         }
       })
+
       let data = await res.text();
       let datas = JSON.parse(data);
+      await this.sendStartSTTNotificationToPeers(false);
+
       if (!datas.message) {
-        that.start = true;
-        this.left = false;
+        that.start = false;
         that.loading = false;
         that.taskId = ''
         that.tokenName = ''
-        that.stopWorker(that.pollingWorker)
+        that.stopWorker(that.pollingWorker);
       } else {
         that.loading = false;
         that.$message.error(datas.message ? datas.message : 'network anomaly')
@@ -779,7 +798,7 @@ export default {
         method: 'get',
         headers: {
           'content-type': 'application/json',
-          'Authorization':this.authorizationField,
+          'Authorization': this.authorizationField,
         }
       }).then(function (data) {
         return data.text();
@@ -848,20 +867,20 @@ export default {
       if (text3.length) {
         let flag = false;
         // this.simpletextMetting += this.allData[textstream.uid].name + '</>' + textstream.uid + '</>' + textstream.time + '</>' + text3 + '</br>';
-        this.simpletextMetting.forEach((item)=>{
+        this.simpletextMetting.forEach((item) => {
           if (item.uid == textstream.uid && textstream.time - item.time < 60000) {
             item.text += text3;
             flag = true;
           }
         })
-        if(!flag&&this.allData[textstream.uid]){
+        if (!flag && this.allData[textstream.uid]) {
           this.simpletextMetting.push({
-            name: this.allData[textstream.uid].name ,
+            name: this.allData[textstream.uid].name,
             uid: textstream.uid,
             time: textstream.time,
             text: text3
           })
-        }      
+        }
       }
       if (text4.length) {
         this.profanityStr += this.allData[textstream.uid].name + ' ' + textstream.uid + ' ' + new Date(parseInt(textstream.time)).toLocaleString() + '</br>' + text4 + '</br>';
@@ -882,16 +901,13 @@ export default {
           stringBuilder += ' '
         }
         stringBuilder += item
-        // if (this.isSentenceBoundaryWord(item)) {
-        //   stringBuilder += '</br>'
-        // }
       })
-      if(stringBuilder[0]&&this.isPunctuationWord(stringBuilder[0])){
-        stringBuilder = stringBuilder.slice(1) 
+      if (stringBuilder[0] && this.isPunctuationWord(stringBuilder[0])) {
+        stringBuilder = stringBuilder.slice(1)
       }
       if (this.allData[textstream.uid]) {
         this.allData[textstream.uid].stringBuilder = stringBuilder;
-        console.log(this.allData[textstream.uid].name,stringBuilder)
+        console.log(this.allData[textstream.uid].name, stringBuilder)
       }
       this.$forceUpdate()
     },
@@ -993,8 +1009,10 @@ export default {
   box-shadow: 1px 0px 10px 0px;
   background: url('../../img/logo.png') 140px 50px no-repeat;
   position: relative;
+
   .content {
     padding-top: 100px;
+
     .item {
       padding: 10px;
       display: flex;
@@ -1061,7 +1079,8 @@ export default {
     margin-bottom: 10px;
     margin-left: 0;
   }
-  .buttonBox{
+
+  .buttonBox {
     width: 120px;
     display: flex;
     flex-flow: row nowrap;
@@ -1088,74 +1107,86 @@ export default {
 .blue {
   color: blue;
 }
+
 .el-menu-vertical-demo:not(.el-menu--collapse) {
   width: 300px;
   height: 100%;
 }
-.el-menu-vertical-demo{
+
+.el-menu-vertical-demo {
   height: 100%;
   // width: 0;
 }
 
-.mobile2{
+.mobile2 {
   width: 100%;
   height: 100vh;
   margin: 0;
-  background:#fff;
-  .content{
-    padding-top:20px ;
+  background: #fff;
+
+  .content {
+    padding-top: 20px;
     width: 90vw;
     -webkit-overflow-scrolling: touch;
   }
-  .drawerContent{
+
+  .drawerContent {
     width: 90vw;
     padding: 5px;
   }
-  .topH{
-    padding-top:0 ;
+
+  .topH {
+    padding-top: 0;
     position: relative;
-    .header{
+
+    .header {
       height: 50px;
       font-size: 30px;
       background: url('../../img/logo.png') 140px 5px no-repeat;
       line-height: 50px;
-      color:#359dfd;
+      color: #359dfd;
       border-bottom: 1px solid #e4e7ed;
     }
 
   }
-  .unfold{
+
+  .unfold {
     border: 0 none;
     position: absolute;
     left: 40px;
     top: 10px;
     transition: all .3s;
   }
-  .close{
+
+  .close {
     transform: rotate(135deg);
-    transform-origin:50% 50%;
+    transform-origin: 50% 50%;
   }
-  .tabs{
+
+  .tabs {
     position: absolute;
     left: 0;
     right: 0;
     top: 50px;
     bottom: 0;
     transition: all .3s;
-    .el-tabs__header{
+
+    .el-tabs__header {
       width: 120px;
     }
-    .el-tabs__content{
+
+    .el-tabs__content {
       height: 100%;
       overflow: scroll;
     }
-    .el-tabs__item{
+
+    .el-tabs__item {
       padding: 0 10px;
     }
   }
-  .tabs-close{
+
+  .tabs-close {
     left: -121px;
   }
 }
-
 </style>
