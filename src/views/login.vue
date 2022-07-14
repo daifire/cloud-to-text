@@ -483,29 +483,29 @@ export default {
       this.outputStreamFanle = ''
 
     },
-    async rtmMemberJoined(channel) {
-      const remoteUserInfo = await this.rtmClient.getChannelAttributes(channel);
-      const userListArray = JSON.parse(JSON.stringify(this.userList));
+    // async rtmMemberJoined(channel) {
+    //   const remoteUserInfo = await this.rtmClient.getChannelAttributes(channel);
+    //   const userListArray = JSON.parse(JSON.stringify(this.userList));
 
-      const remoteUserInfoArray = Object.keys(remoteUserInfo).map(key => {
-        return {
-          uid: key,
-          name: remoteUserInfo[key]
-        }
-      });
+    //   const remoteUserInfoArray = Object.keys(remoteUserInfo).map(key => {
+    //     return {
+    //       uid: key,
+    //       name: remoteUserInfo[key]
+    //     }
+    //   });
 
-      const usersToBeAdded = remoteUserInfoArray.filter(remoteUserInfo => {
-        return !userListArray.some(userList => userList.uid == remoteUserInfo.uid);
-      });
+    //   const usersToBeAdded = remoteUserInfoArray.filter(remoteUserInfo => {
+    //     return !userListArray.some(userList => userList.uid == remoteUserInfo.uid);
+    //   });
 
-      usersToBeAdded.forEach(item => {
-        this.userList.push({ uid: item.uid, name: item.name.value, online: false });
-        this.allData[item.uid] = {
-          src: require('../../img/avatar' + item.uid.toString().slice(-1) + '.png'),
-          name: item.name.value
-        }
-      })
-    },
+    //   usersToBeAdded.forEach(item => {
+    //     this.userList.push({ uid: item.uid, name: item.name.value, online: false });
+    //     this.allData[item.uid] = {
+    //       src: require('../../img/avatar' + item.uid.toString().slice(-1) + '.png'),
+    //       name: item.name.value
+    //     }
+    //   })
+    // },
     async rtmMemberLeft() {
       if (this.uid && this.options.channel) {
         await this.rtmClient.deleteChannelAttributesByKeys(this.options.channel, [this.uid.toString()]);
@@ -519,6 +519,9 @@ export default {
       else {
         this.peerStartedSTT = false;
         this.start = false;
+        if(this.tokenName){
+          this.stopFanl()
+        }
       }
     },
     rtmMemberJoined(isSttStarted){
@@ -769,29 +772,30 @@ export default {
       this.loading = true;
       this.peerStartedSTT = false;
       await this.sendStartSTTNotificationToPeers(false);
+      if(this.tokenName){
+        let res = await fetch(`/api/v1/projects/${VUE_APP_ID}/rtsc/speech-to-text/tasks/${this.taskId}?builderToken=${this.tokenName}`, {
+          method: 'delete',
+          keepalive: true,
+          headers: {
+            'content-type': 'application/json',
+            'Authorization': this.authorizationField,
+          }
+        })
 
-      let res = await fetch(`/api/v1/projects/${VUE_APP_ID}/rtsc/speech-to-text/tasks/${this.taskId}?builderToken=${this.tokenName}`, {
-        method: 'delete',
-        keepalive: true,
-        headers: {
-          'content-type': 'application/json',
-          'Authorization': this.authorizationField,
+        let data = await res.text();
+        let datas = JSON.parse(data);
+
+        if (!datas.message) {
+          that.start = false;
+          that.loading = false;
+          that.taskId = ''
+          that.tokenName = ''
+          that.stopWorker(that.pollingWorker);
+        } else {
+          that.loading = false;
+          that.start = false;
+          that.$message.error(datas.message ? datas.message : 'network anomaly')
         }
-      })
-
-      let data = await res.text();
-      let datas = JSON.parse(data);
-
-      if (!datas.message) {
-        that.start = false;
-        that.loading = false;
-        that.taskId = ''
-        that.tokenName = ''
-        that.stopWorker(that.pollingWorker);
-      } else {
-        that.loading = false;
-        that.start = false;
-        that.$message.error(datas.message ? datas.message : 'network anomaly')
       }
     },
     async queryFanl() {
