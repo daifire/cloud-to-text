@@ -145,16 +145,16 @@
             </div>
           </div>
           <div style="position: fixed;top: 80vh;left: 50%;margin-left: -24px;width: 200px;text-align: left;">
-            <el-button icon="el-icon-microphone" style="width:auto;font-size:30px;" circle v-if="peerStartedSTT"
+            <el-button icon="el-icon-microphone" style="width:auto;font-size:30px;" circle v-if="!peerStartedSTT"
               @click="startFanl" size="mini" type="primary" title="Start Transcription">
             </el-button>
             <el-button icon="el-icon-turn-off-microphone" v-else
               style="width:auto;background:#cb4c38;font-size:30px;border:#cb4c38;" circle @click="stopFanl" size="mini"
               type="primary" title="Stop Transcription">
             </el-button>
-            <span style="font-size:14px;color:#000;margin-left:20px;vertical-align: 5px;"
+            <span style="font-size:14px;color:#000;margin-left:20px;vertical-align: 5px;" v-if="start"
               >recording...</span>
-            <span style="font-size:14px;color:#000;margin-left:20px;vertical-align: 5px;" v-if="start">click to
+            <span style="font-size:14px;color:#000;margin-left:20px;vertical-align: 5px;" v-if="!start">click to
               start</span>
           </div>
         </el-tab-pane>
@@ -704,7 +704,6 @@ export default {
       if (this.options.role == 'host') {
         await this.rtc.client.publish([this.rtc.localAudioTrack]);
       }
-
       await this.sendStartSTTNotificationToPeers(true);
 
       if (!this.isOAverdue()) {
