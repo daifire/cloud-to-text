@@ -146,11 +146,11 @@
           </div>
           <div style="position: fixed;top: 80vh;left: 50%;margin-left: -24px;width: 200px;text-align: left;">
             <el-button icon="el-icon-microphone" style="width:auto;font-size:30px;" circle v-if="!peerStartedSTT"
-              @click="startFanl" size="mini" type="primary" title="Start Transcription">
+              @click="startFanl" size="mini" type="primary" title="Start Transcription" :loading="loading">
             </el-button>
             <el-button icon="el-icon-turn-off-microphone" v-else
               style="width:auto;background:#cb4c38;font-size:30px;border:#cb4c38;" circle @click="stopFanl" size="mini"
-              type="primary" title="Stop Transcription">
+              type="primary" title="Stop Transcription" :loading="loading">
             </el-button>
             <span style="font-size:14px;color:#000;margin-left:20px;vertical-align: 5px;" v-if="start"
               >recording...</span>
@@ -173,19 +173,19 @@
             </div>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="Content Filter" name="Content Filter">
+        <!-- <el-tab-pane label="Content Filter" name="Content Filter">
           <div class="drawerContent">
             <p v-html="profanityStr"></p>
           </div>
-        </el-tab-pane>
+        </el-tab-pane> -->
       </el-tabs>
     </div>
     <div class="buttonList" v-if="index == 2 && !isMobile">
       <el-button v-if="peerStartedSTT" icon="el-icon-microphone"
         style="width:auto;background:#cb4c38;font-size:30px;border:#cb4c38;" circle @click="stopFanl" size="mini"
-        type="primary" title="Stop Transcription"></el-button>
+        type="primary" title="Stop Transcription" :loading="loading"></el-button>
       <el-button v-else icon="el-icon-turn-off-microphone" style="width:auto;font-size:30px;" circle @click="startFanl"
-        size="mini" type="primary" title="Start Transcription"></el-button>
+        size="mini" type="primary" title="Start Transcription" :loading="loading"></el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="back">Leave Room</el-button>
       <el-button size="mini" v-show="false" type="primary" plain @click="fanl" v-if="start">load transcription
       </el-button>
@@ -193,7 +193,7 @@
       </el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleText">Full Transcription</el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleTextMeeting">Conversation</el-button>
-      <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content Filter</el-button>
+      <!-- <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content Filter</el-button> -->
       <el-button size="mini" v-show="false" type="primary" plain @click="queryFanl" :disabled="!taskId">Query status
       </el-button>
     </div>
@@ -353,7 +353,7 @@ export default {
     }
   },
   created() {
-    console.log('version 3')
+    console.log('version 4')
     if (window.screen.width < 500) {
       this.isMobile = true
     }
@@ -474,7 +474,10 @@ export default {
       });
     },
     back() {
-      this.index = 1;
+      if(this.loading){
+        return 
+      }
+      this.loading = false;
       this.start = false;
       this.hostList = [];
       this.userList = [];
@@ -704,8 +707,6 @@ export default {
       if (this.options.role == 'host') {
         await this.rtc.client.publish([this.rtc.localAudioTrack]);
       }
-      await this.sendStartSTTNotificationToPeers(true);
-
       if (!this.isOAverdue()) {
         axios.post(`/api/v1/projects/${VUE_APP_ID}/rtsc/speech-to-text/tasks?builderToken=${this.tokenName}`, {
           "audio": {
@@ -746,6 +747,7 @@ export default {
             this.start = true;
             this.loading = false;
             this.taskId = res.data.taskId;
+            this.sendStartSTTNotificationToPeers(true);
             this.createWorker(() => {
               if (this.taskId) {
                 console.log(new Date())
@@ -795,6 +797,8 @@ export default {
           that.start = false;
           that.$message.error(datas.message ? datas.message : 'network anomaly')
         }
+      }else{
+        this.loading = false
       }
     },
     async queryFanl() {
@@ -822,6 +826,7 @@ export default {
     uint8Array(uint8Array) {
       let textstream = protoRoot.lookup("Text").decode(uint8Array);
       let words = textstream.words;
+      console.log(words)
       if (textstream.seqnum === this.lastseqnum) {
         return;
       } else {
@@ -916,7 +921,7 @@ export default {
       }
       if (this.allData[textstream.uid]) {
         this.allData[textstream.uid].stringBuilder = stringBuilder;
-        console.log(this.allData[textstream.uid].name, stringBuilder)
+        // console.log(this.allData[textstream.uid].name, stringBuilder)
       }
       this.$forceUpdate()
     },
@@ -950,6 +955,7 @@ export default {
       if (this.rtc.localAudioTrack) {
         await this.leaveRoom();
       }
+      this.index = 1;
       localStorage.setItem("outputStreamNoFanle", this.outputStreamNoFanle)
       localStorage.setItem("outputStreamFanle", this.outputStreamFanle)
 
