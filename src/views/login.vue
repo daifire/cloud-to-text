@@ -173,11 +173,11 @@
             </div>
           </div>
         </el-tab-pane>
-        <!-- <el-tab-pane label="Content Filter" name="Content Filter">
+        <el-tab-pane label="Content Filter" name="Content Filter">
           <div class="drawerContent">
             <p v-html="profanityStr"></p>
           </div>
-        </el-tab-pane> -->
+        </el-tab-pane>
       </el-tabs>
     </div>
     <div class="buttonList" v-if="index == 2 && !isMobile">
@@ -193,7 +193,7 @@
       </el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleText">Full Transcription</el-button>
       <el-button size="mini" v-show="join" type="primary" plain @click="simpleTextMeeting">Conversation</el-button>
-      <!-- <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content Filter</el-button> -->
+      <el-button size="mini" v-show="join" type="primary" plain @click="profanity">Content Filter</el-button>
       <el-button size="mini" v-show="false" type="primary" plain @click="queryFanl" :disabled="!taskId">Query status
       </el-button>
     </div>
@@ -826,7 +826,7 @@ export default {
     uint8Array(uint8Array) {
       let textstream = protoRoot.lookup("Text").decode(uint8Array);
       let words = textstream.words;
-      console.log(words)
+      // console.log(words)
       if (textstream.seqnum === this.lastseqnum) {
         return;
       } else {
@@ -849,13 +849,17 @@ export default {
       words.forEach((item) => {
         if (this.isProfanityWord(item.text)) {
           if (item.isFinal) {
-            text4 += item.text.split(':')[0].split('[')[1] + ' -> ' + item.text.split(':')[1].split(']')[0] + " ; ";
+            text4 += item.text.split(':')[0].split('[')[1] + ' -> ' + item.text.split(':')[1].split(']')[0] + '</br>';
           }
           item.text = item.text.split(':')[0].split('[')[1];
         }
         if (item.isFinal) {
           this.finalLists[textstream.uid].push(item.text)
+          console.log(this.finalLists[textstream.uid])
           if (this.isSentenceBoundaryWord(item.text)) {
+            if(text4.length){
+              text4 += JSON.parse(JSON.stringify(this.finalLists[textstream.uid].join(' ')));
+            }
             this.finalLists[textstream.uid] = [];
           }
           text1 += "<span class='red'>" + textstream.uid + '</span> ' + "<span class='blue'>" + item.text + '</span> ' + "<span class='yellow'>(" + item.confidence.toFixed(2) + ')</span> ';
