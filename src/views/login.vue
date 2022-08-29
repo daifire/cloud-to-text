@@ -832,7 +832,7 @@ export default {
       } else {
         this.lastSeqnum = textstream.seqnum;
       }
-      if ((this.hostList.indexOf(textstream.uid) >= 4 && this.options.role == 'host') || (this.hostList.indexOf(textstream.uid) >= 5 && this.options.role == 'audience')) {
+      if ((this.hostList.indexOf(textstream.uid) >= 3 && this.options.role == 'host') || (this.hostList.indexOf(textstream.uid) >= 4 && this.options.role == 'audience')) {
         return
       }
       if (!this.finalLists[textstream.uid]) {
