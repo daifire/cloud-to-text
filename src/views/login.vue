@@ -175,7 +175,12 @@
         </el-tab-pane>
         <el-tab-pane label="Content Filter" name="Content Filter">
           <div class="drawerContent">
-            <p v-html="profanityStr"></p>
+            <!-- <p v-html="profanityStr"></p> -->
+            <div v-for="(item,i) in profanityStr" :key="i">
+              <p>{{item.title}}</p>
+              <p>{{item.word}}</p>
+              <p>{{wordsToText(item.allWords)}}</p>
+            </div>
           </div>
         </el-tab-pane>
       </el-tabs>
@@ -222,7 +227,11 @@
     </el-drawer>
     <el-drawer title="Conversation(Content Filter)" :visible.sync="drawerFanlProfanity">
       <div class="drawerContent">
-        <p v-html="profanityStr"></p>
+        <div v-for="(item,i) in profanityStr" :key="i">
+          <p>{{item.title}}</p>
+          <p>{{item.word}}</p>
+          <p>{{wordsToText(item.allWords)}}</p>
+        </div>
       </div>
     </el-drawer>
     <el-drawer title="Conversation" :visible.sync="drawerFanlSimpleMetting">
@@ -342,7 +351,7 @@ export default {
       simpletextMetting: [],
       rtmChannel: '',
       // str: '',
-      profanityStr: '',
+      profanityStr: [],
       drawerFanlProfanity: false,
       isCollapse: false,
       isMobile: false,
@@ -826,7 +835,7 @@ export default {
     uint8Array(uint8Array) {
       let textstream = protoRoot.lookup("Text").decode(uint8Array);
       let words = textstream.words;
-      // console.log(words)
+      console.log(words)
       if (textstream.seqnum === this.lastseqnum) {
         return;
       } else {
@@ -845,22 +854,33 @@ export default {
       let text1 = '';
       let text2 = '';
       let text3 = '';
-      let text4 = '';//fanityWord
+      let text5 = '';//有脏词时完整的句子
       words.forEach((item) => {
         if (this.isProfanityWord(item.text)) {
           if (item.isFinal) {
-            text4 += item.text.split(':')[0].split('[')[1] + ' -> ' + item.text.split(':')[1].split(']')[0] + '</br>';
+            this.profanityStr.push({
+              title:this.allData[textstream.uid].name + ' ' + textstream.uid + ' ' + new Date(parseInt(textstream.time)).toLocaleString(),
+              word:item.text.split(':')[0].split('[')[1] + ' -> ' + item.text.split(':')[1].split(']')[0] + '',
+              allWords:text5
+            }) 
           }
           item.text = item.text.split(':')[0].split('[')[1];
         }
         if (item.isFinal) {
           this.finalLists[textstream.uid].push(item.text)
-          console.log(this.finalLists[textstream.uid])
+          text5 = JSON.parse(JSON.stringify(this.finalLists[textstream.uid]));
+          console.log(text5)
           if (this.isSentenceBoundaryWord(item.text)) {
-            if(text4.length){
-              text4 += JSON.parse(JSON.stringify(this.finalLists[textstream.uid].join(' ')));
-            }
             this.finalLists[textstream.uid] = [];
+            let i = 0;
+            for (let index = 0; index < text5.length; index++) {
+              if(text5[index].includes("*")){
+                i+=1;
+                console.log(i)
+                this.profanityStr[this.profanityStr.length-i].allWords = text5;
+              }
+            }
+              
           }
           text1 += "<span class='red'>" + textstream.uid + '</span> ' + "<span class='blue'>" + item.text + '</span> ' + "<span class='yellow'>(" + item.confidence.toFixed(2) + ')</span> ';
 
@@ -898,9 +918,6 @@ export default {
             text: text3
           })
         }
-      }
-      if (text4.length) {
-        this.profanityStr += this.allData[textstream.uid].name + ' ' + textstream.uid + ' ' + new Date(parseInt(textstream.time)).toLocaleString() + '</br>' + text4 + '</br>';
       }
       let stringBuilder = '';
       this.finalLists[textstream.uid].forEach(item => {
