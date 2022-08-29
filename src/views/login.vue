@@ -841,7 +841,7 @@ export default {
       } else {
         this.lastSeqnum = textstream.seqnum;
       }
-      if ((this.hostList.indexOf(textstream.uid) >= 4 && this.options.role == 'host') || (this.hostList.indexOf(textstream.uid) >= 5 && this.options.role == 'audience')) {
+      if ((this.hostList.indexOf(textstream.uid) >= 3 && this.options.role == 'host') || (this.hostList.indexOf(textstream.uid) >= 4 && this.options.role == 'audience')) {
         return
       }
       if (!this.finalLists[textstream.uid]) {
@@ -861,7 +861,8 @@ export default {
             this.profanityStr.push({
               title:this.allData[textstream.uid].name + ' ' + textstream.uid + ' ' + new Date(parseInt(textstream.time)).toLocaleString(),
               word:item.text.split(':')[0].split('[')[1] + ' -> ' + item.text.split(':')[1].split(']')[0] + '',
-              allWords:text5
+              allWords:text5,
+              uid:textstream.uid
             }) 
           }
           item.text = item.text.split(':')[0].split('[')[1];
@@ -877,8 +878,10 @@ export default {
               if(text5[index].includes("*")){
                 i+=1;
                 console.log(i)
-                this.profanityStr[this.profanityStr.length-i].allWords = text5;
               }
+            }
+            for (let index = 0; index < i; index++) {
+              this.profanityStr[this.profanityStr.length-i].allWords = text5;
             }
               
           }
