@@ -877,13 +877,20 @@ export default {
             for (let index = 0; index < text5.length; index++) {
               if(text5[index].includes("*")){
                 i+=1;
-                console.log(i)
               }
             }
-            for (let index = 0; index < i; index++) {
-              this.profanityStr[this.profanityStr.length-i].allWords = text5;
-            }
-              
+            console.log(this.profanityStr)
+            // if(i>0){
+            //   for (let index = 0; index < this.profanityStr.length; index++) {
+            //     if(this.profanityStr[this.profanityStr.length-index-1].uid == textstream.uid){
+            //       this.profanityStr[this.profanityStr.length-index-1].allWords = text5;
+            //       i-=1
+            //     }
+            //     if(i == 0){
+            //       break
+            //     }
+            //   }
+            // }
           }
           text1 += "<span class='red'>" + textstream.uid + '</span> ' + "<span class='blue'>" + item.text + '</span> ' + "<span class='yellow'>(" + item.confidence.toFixed(2) + ')</span> ';
 
