@@ -835,7 +835,7 @@ export default {
     uint8Array(uint8Array) {
       let textstream = protoRoot.lookup("Text").decode(uint8Array);
       let words = textstream.words;
-      console.log(words)
+      // console.log(words)
       if (textstream.seqnum === this.lastseqnum) {
         return;
       } else {
@@ -861,7 +861,7 @@ export default {
             this.profanityStr.push({
               title:this.allData[textstream.uid].name + ' ' + textstream.uid + ' ' + new Date(parseInt(textstream.time)).toLocaleString(),
               word:item.text.split(':')[0].split('[')[1] + ' -> ' + item.text.split(':')[1].split(']')[0] + '',
-              allWords:text5,
+              allWords:[],
               uid:textstream.uid
             }) 
           }
@@ -870,7 +870,6 @@ export default {
         if (item.isFinal) {
           this.finalLists[textstream.uid].push(item.text)
           text5 = JSON.parse(JSON.stringify(this.finalLists[textstream.uid]));
-          console.log(text5)
           if (this.isSentenceBoundaryWord(item.text)) {
             this.finalLists[textstream.uid] = [];
             let i = 0;
@@ -879,18 +878,17 @@ export default {
                 i+=1;
               }
             }
-            console.log(this.profanityStr)
-            // if(i>0){
-            //   for (let index = 0; index < this.profanityStr.length; index++) {
-            //     if(this.profanityStr[this.profanityStr.length-index-1].uid == textstream.uid){
-            //       this.profanityStr[this.profanityStr.length-index-1].allWords = text5;
-            //       i-=1
-            //     }
-            //     if(i == 0){
-            //       break
-            //     }
-            //   }
-            // }
+            if(i>0){
+              for (let index = 0; index < this.profanityStr.length; index++) {
+                if(this.profanityStr[this.profanityStr.length-index-1].uid == textstream.uid){
+                  this.profanityStr[this.profanityStr.length-index-1].allWords = text5;
+                  i-=1
+                }
+                if(i == 0){
+                  break
+                }
+              }
+            }
           }
           text1 += "<span class='red'>" + textstream.uid + '</span> ' + "<span class='blue'>" + item.text + '</span> ' + "<span class='yellow'>(" + item.confidence.toFixed(2) + ')</span> ';
 
@@ -970,6 +968,7 @@ export default {
     },
     //  Builds text for a list of words (texts) as returned from the service.
     wordsToText(words) {
+      if (!words.length) return
       let builder = '';
       words.forEach(item => {
         if (builder.length > 0 && !this.isPunctuationWord(item)) {
